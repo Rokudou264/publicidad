@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/videos_publicidad.css">
+    <title>publicidad - Publicidad</title>
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Universidad  - Publicidad">
+    <meta property="og:type" content="videos">
+    <meta property="og:description" content="Transmisión en vivo las 24 horas de videos publicitarios de la Universidad .">
+    <meta property="og:site_name" content="Universidad  - Publicidad">
+    <meta property="og:image" content="..//assets/images/-login.png">
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:site" content="@universidadsanlorenzo">
+    <meta name="twitter:title" content="Universidad  - Publicidad">
+    <meta name="twitter:description" content="Transmisión en vivo las 24 horas de videos publicitarios de la Universidad .">
+    <meta name="twitter:image" content="..//assets/images/-login.png">
+    <!--  Social tags -->
+    <meta name="keywords" content="publicidad, publicidad, publicidad, consultas, consulta, consulta carrera, publicidad, Publicidad, Universidad, transmisión en vivo, videos publicitarios">
+    <meta name="description" content="Transmisión en vivo las 24 horas de videos publicitarios de la Universidad .">
+</head>
+
+<body>
+    <img id="logo" src="..//assets/images/-login.png">
+    <video id="videoPlayer" poster="..//assets/images/3pngwing.com.png" preload="auto" playsinline autoplay muted></video>
+    <button id="playButton">Pantalla completa</button>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playButton = document.getElementById('playButton');
+
+        videoPlayer.addEventListener('mouseover', () => {
+            videoPlayer.controls = true;
+        });
+
+        videoPlayer.addEventListener('mouseout', () => {
+            videoPlayer.controls = false;
+        });
+
+        playButton.addEventListener('click', () => {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.mozRequestFullScreen) { // Firefox
+                videoPlayer.mozRequestFullScreen();
+            } else if (videoPlayer.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) { // IE, Edge
+                videoPlayer.msRequestFullscreen();
+            }
+            videoPlayer.play();
+        });
+
+        fetch('class/videos.php')
+            .then(response => response.json())
+            .then(videos => {
+                let i = 0;
+                videoPlayer.src = videos[i].ruta;
+
+                videoPlayer.onended = () => {
+                    i = (i + 1) % videos.length; // hace que vuelva al primer video despues del ultimo
+                    videoPlayer.src = videos[i].ruta;
+                };
+            }).catch(error => {
+                console.error('Error fetch:', error);
+            });
+    </script>
+
+</body>
+
+</html>
